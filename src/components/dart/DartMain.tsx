@@ -1,27 +1,33 @@
 import React, { useState } from 'react';
+import ScoreDisplay from './ScoreDisplay';
 
 const DartCounter = () => {
   const [score, setScore] = useState(0);
+  const [throwCount, setThrowCount] = useState(0);
   const [throws, setThrows] = useState<string[]>([]);
 
   const handleThrow = (multiplier: number) => {
     const points = multiplier * 20;
-    const throwLabel = multiplier === 0 ? 'Miss' : 
+    const throwLabel = multiplier === 0 ? 'Miss'  : 
                       multiplier === 1 ? 'Single' :
                       multiplier === 2 ? 'Double' : 'Triple';
     
     setScore(prev => prev + points);
-    setThrows(prev => [...prev, `${throwLabel} (${points})`]);
+    setThrows(prev => [...prev, `${throwLabel} (${throwCount})`]);
+    setThrowCount(prev => prev + 1);
   };
+
+
 
   const resetGame = () => {
     setScore(0);
+    setThrowCount(0);
     setThrows([]);
   };
 
   return (
     <div style={{
-      maxWidth: '400px',
+      maxWidth: '1200px',
       margin: '20px auto',
       padding: '20px',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
@@ -29,17 +35,10 @@ const DartCounter = () => {
       backgroundColor: 'white'
     }}>
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>
-        Dart Counter - 20s
+        Dart Counter
       </h1>
 
-      <div style={{ 
-        textAlign: 'center', 
-        fontSize: '24px', 
-        fontWeight: 'bold',
-        marginBottom: '20px'
-      }}>
-        Score: {score}
-      </div>
+      <ScoreDisplay score={score} throwCount={throwCount}/>
 
       <div style={{
         display: 'grid',
