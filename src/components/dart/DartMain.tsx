@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import ScoreDisplay from './ScoreDisplay';
+import ThrowHistory from './ThrowHistory';
+import CustomButton from '../generics/CustomButton';
 
 const DartCounter = () => {
   const [score, setScore] = useState(0);
@@ -46,58 +48,26 @@ const DartCounter = () => {
         gap: '10px',
         marginBottom: '20px'
       }}>
-        <button
+        <CustomButton
           onClick={() => handleThrow(1)}
-          style={{
-            padding: '10px',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
-        >
-          Single (20)
-        </button>
-        <button
+          color="#4CAF50" //4CAF50
+          text="Triple (60)"
+        />
+        <CustomButton
           onClick={() => handleThrow(2)}
-          style={{
-            padding: '10px',
-            backgroundColor: '#2196F3',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
-        >
-          Double (40)
-        </button>
-        <button
+          color="#2196F3" 
+          text="Double (40)"
+        />
+        <CustomButton
           onClick={() => handleThrow(3)}
-          style={{
-            padding: '10px',
-            backgroundColor: '#9C27B0',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
-        >
-          Triple (60)
-        </button>
-        <button
+          color="#9C27B0" 
+          text="Triple (60)"
+        />
+        <CustomButton
           onClick={() => handleThrow(0)}
-          style={{
-            padding: '10px',
-            backgroundColor: '#f44336',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
-        >
-          Miss (0)
-        </button>
+          color="#f44336" 
+          text="Miss (0)"
+        />
       </div>
 
       <button
@@ -114,28 +84,8 @@ const DartCounter = () => {
       >
         Reset Game
       </button>
-
-      <div>
-        <h3 style={{ marginBottom: '10px' }}>Throw History:</h3>
-        <div style={{ 
-          maxHeight: '200px', 
-          overflowY: 'auto',
-          border: '1px solid #eee',
-          borderRadius: '4px'
-        }}>
-          {throws.map((t, i) => (
-            <div 
-              key={i}
-              style={{
-                padding: '8px',
-                borderBottom: '1px solid #eee'
-              }}
-            >
-              {i + 1}. {t}
-            </div>
-          ))}
-        </div>
-      </div>
+      <ThrowHistory throws={throws} />
+      
     </div>
   );
 };
