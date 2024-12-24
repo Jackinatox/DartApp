@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ScoreDisplay from './ScoreDisplay';
 import ThrowHistory from './ThrowHistory';
-import CustomButton from '../generics/CustomButton';
+import CustomButton from '../CustomButton/CustomButton';
 
 const DartCounter = () => {
   const [score, setScore] = useState(0);
