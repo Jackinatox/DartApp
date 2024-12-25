@@ -13,7 +13,7 @@ function App() {
     // Validate session on app load
     const checkSession = async () => {
       try {
-        const user = pb.authStore.model;
+        const user = pb.authStore.record;
         if (user) {
           // Attempt to refresh session
           await pb.collection('users').authRefresh();
