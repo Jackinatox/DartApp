@@ -2,6 +2,7 @@ import { useState } from 'react';
 import ScoreDisplay from './ScoreDisplay';
 import ThrowHistory from './ThrowHistory';
 import CustomButton from '../CustomButton/CustomButton';
+import TopBar from "../CustomButton/TopBar";
 
 const DartCounter = () => {
   const [score, setScore] = useState(0);
@@ -36,6 +37,7 @@ const DartCounter = () => {
       borderRadius: '8px',
       backgroundColor: 'white'
     }}>
+      <TopBar />
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>
         Dart Counter
       </h1>
