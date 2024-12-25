@@ -4,17 +4,16 @@ import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 
 
-const Register: React.FC = () => {
+const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');   
-    const [Confpassword, setConfPassword] = useState('');    
 
     const isValidEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
     
-    const isButtonEnabled = password === Confpassword && password.length > 3 && isValidEmail(email);
+    const isButtonEnabled = password.length > 3 && isValidEmail(email);
 
     const buttonStyle: React.CSSProperties = {
         maxWidth: '60%', 
@@ -24,15 +23,11 @@ const Register: React.FC = () => {
         gap: '10px', 
     };
 
-    const handleRegister = async () => {
+    const handleLogin = async () => {
         try {
-            await pb.collection('users').create({
-                email: email,
-                password: password,
-                passwordConfirm: password,
-            });         
+            const authData = await pb.collection('users').authWithPassword(email, password);
 
-            alert('Registration successful!');
+            alert(authData.token);
         } catch (error) {
             console.error('Registration failed:', error);
             alert(error);
@@ -57,21 +52,13 @@ const Register: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 slotProps={{ input: { 'aria-label': 'Password' } }}
             />
-            <Input
-                variant="outlined"
-                type="password"
-                placeholder="Confim Password"
-                value={Confpassword}
-                onChange={(e) => setConfPassword(e.target.value)}
-                slotProps={{ input: { 'aria-label': 'Password' } }}
-            />
             <Button 
                 variant="outlined"
-                 onClick={handleRegister}
+                 onClick={handleLogin}
                  disabled={!isButtonEnabled}
-                 > Register </Button>
+                 > Login </Button>
         </div>
     );
 }
 
-export default Register;
+export default Login;

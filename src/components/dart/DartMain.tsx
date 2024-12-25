@@ -51,7 +51,7 @@ const DartCounter = () => {
         <CustomButton
           onClick={() => handleThrow(1)}
           color="#4CAF50" //4CAF50
-          text="Triple (60)"
+          text="Single (20)"
         />
         <CustomButton
           onClick={() => handleThrow(2)}
