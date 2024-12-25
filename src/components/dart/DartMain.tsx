@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ScoreDisplay from './ScoreDisplay';
 import ThrowHistory from './ThrowHistory';
 import CustomButton from '../CustomButton/CustomButton';

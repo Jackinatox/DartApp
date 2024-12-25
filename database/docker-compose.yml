@@ -7,6 +7,6 @@ services:
     ports:
       - "8090:80"
     volumes:
-      - ./data/data:/pb_data
-      - ./data/public:/pb_public
-      - ./data/migrations:/pb_migrations
+      - ./data:/pb_data
+      - ./public:/pb_public
+      - ./migrations:/pb_migrations
