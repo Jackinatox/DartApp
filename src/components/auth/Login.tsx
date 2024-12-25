@@ -7,6 +7,7 @@ import Button from '@mui/joy/Button';
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');   
+    const [loading, setLoading] = useState(false);
 
     const isValidEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,6 +26,7 @@ const Login: React.FC = () => {
 
     const handleLogin = async () => {
         try {
+            setLoading(true);
             const authData = await pb.collection('users').authWithPassword(email, password);
 
             alert(authData.token);
@@ -32,6 +34,7 @@ const Login: React.FC = () => {
             console.error('Registration failed:', error);
             alert(error);
         }
+        setLoading(false);
     };  
     
     return (
@@ -56,6 +59,7 @@ const Login: React.FC = () => {
                 variant="outlined"
                  onClick={handleLogin}
                  disabled={!isButtonEnabled}
+                 loading={loading}
                  > Login </Button>
         </div>
     );

@@ -8,6 +8,7 @@ const Register: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');   
     const [Confpassword, setConfPassword] = useState('');    
+    const [loading, setLoading] = useState(false);
 
     const isValidEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,17 +27,19 @@ const Register: React.FC = () => {
 
     const handleRegister = async () => {
         try {
+            setLoading(true);
             await pb.collection('users').create({
                 email: email,
                 password: password,
                 passwordConfirm: password,
             });         
-
+            await pb.collection('users').authWithPassword(email, password);     //actual login
             alert('Registration successful!');
         } catch (error) {
             console.error('Registration failed:', error);
             alert(error);
         }
+        setLoading(false);
     };  
     
     return (
@@ -69,6 +72,7 @@ const Register: React.FC = () => {
                 variant="outlined"
                  onClick={handleRegister}
                  disabled={!isButtonEnabled}
+                 loading={loading}
                  > Register </Button>
         </div>
     );

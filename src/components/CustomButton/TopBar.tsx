@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router";
 import pb from '../../services/pocketbase';
 import Avatar from '@mui/joy/Avatar';
@@ -27,13 +27,13 @@ const TopBar: React.FC = () => {
         }
     } 
 
-    const barStyle: React.CSSProperties = {
-        maxWidth: '100%',
-        margin: '0 auto',
-        display: 'flex',
-        flexDirection: 'row',
-        gap: '10px',
-    };
+//    const barStyle: React.CSSProperties = {
+//        maxWidth: '100%',
+//        margin: '0 auto',
+//        display: 'flex',
+//        flexDirection: 'row',
+//        gap: '10px',
+//    };
 
 
     return (
