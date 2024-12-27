@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate  } from "react-router-dom";
 import pb from "../../services/pocketbase";
 
 import List from '@mui/joy/List';
@@ -19,6 +19,8 @@ const GamesList: React.FC = () => {
     const [user] = useState(pb.authStore.record);
     const [loading, setLoading] = useState(true);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         const fetchGames = async () => {
             try {
@@ -31,22 +33,28 @@ const GamesList: React.FC = () => {
             } catch (error) {
                 console.error("Failed to fetch games:", error);
             }
-            setLoading(false);
         };
 
         fetchGames();
     }, []);
 
+    useEffect(() => {
+        if (games.length > 0) {
+            const timer = setTimeout(() => setLoading(false), 100);
+            return () => clearTimeout(timer);
+        }
+    }, [games]); // Runs whenever `games` changes
+
     return (
         <>
-            {loading && (<CircularProgress /> )}
+            {loading && (<CircularProgress />)}
 
             <List>
                 {games.map((game: any) => (
                     <ListItem key={game.id}>
-                        <ListItemButton>
+                        <ListItemButton onClick={() => navigate(`/game/${game.throws}` )}>
                             <ListItemDecorator><SportsIcon /></ListItemDecorator>
-                            <ListItemContent><Link to={`/game/${game.id}`}>{game.created}</Link></ListItemContent>
+                            <ListItemContent>{game.created}</ListItemContent>
                             <KeyboardArrowRight />
                         </ListItemButton>
 

@@ -6,6 +6,7 @@ import Login from './components/auth/Login.tsx';
 import './index.css'
 import App from './App.tsx'
 import GamesList from './components/dart/GameList.tsx';
+import LoggedDart from './components/dart/LoggedInDart.tsx';
 
 const router = createBrowserRouter([
   {
@@ -21,9 +22,13 @@ const router = createBrowserRouter([
     element: <Login />
   }, 
   {
-    path: '/glist',
+    path: '/games',
     element: <GamesList />
   },  
+  {
+    path: '/game/:gameId',
+    element: <LoggedDart />
+  }
 ]);
 
 createRoot(document.getElementById('root')!).render(

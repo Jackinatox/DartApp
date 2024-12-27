@@ -30,10 +30,10 @@ function App() {
 //  if (!isAuthenticated) {
 //    return <div>Please log in.</div>; // Replace with your login component
 //  }
+//<div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '20px' }}>
+//</div>
   return (
-    <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '20px' }}>
       <Dart />
-    </div>
   )
 }
 
