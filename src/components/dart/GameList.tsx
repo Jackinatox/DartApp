@@ -7,7 +7,9 @@ import ListItem from '@mui/joy/ListItem';
 import { ListItemButton, ListItemContent } from "@mui/joy";
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import SportsIcon from '@mui/icons-material/Sports';       
+import SportsIcon from '@mui/icons-material/Sports';
+import CircularProgress from '@mui/joy/CircularProgress';
+
 
 
 
@@ -15,10 +17,12 @@ const GamesList: React.FC = () => {
     const [games, setGames] = useState<any[]>([]);
     //const [userValid] = useState(pb.authStore.isValid);
     const [user] = useState(pb.authStore.record);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchGames = async () => {
             try {
+                setLoading(true);
                 const Lgames = await pb.collection("Games").getFullList({
                     filter: `owner = '${user?.id}'`,
                 });
@@ -27,6 +31,7 @@ const GamesList: React.FC = () => {
             } catch (error) {
                 console.error("Failed to fetch games:", error);
             }
+            setLoading(false);
         };
 
         fetchGames();
@@ -34,15 +39,17 @@ const GamesList: React.FC = () => {
 
     return (
         <>
+            {loading && (<CircularProgress /> )}
+
             <List>
                 {games.map((game: any) => (
                     <ListItem key={game.id}>
                         <ListItemButton>
                             <ListItemDecorator><SportsIcon /></ListItemDecorator>
                             <ListItemContent><Link to={`/game/${game.id}`}>{game.created}</Link></ListItemContent>
-                            <KeyboardArrowRight /> 
+                            <KeyboardArrowRight />
                         </ListItemButton>
-                        
+
                     </ListItem>
                 ))}
             </List>
