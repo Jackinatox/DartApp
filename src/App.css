@@ -7,6 +7,13 @@
   text-align: center;
 }
 
+body {
+  background-color: #e5e5e5d9; /* Set your desired color */
+  margin: 0; /* Remove default margin for a cleaner layout */
+  font-family: Arial, sans-serif; /* Optional: Customize the font */
+}
+
+
 .logo {
   height: 6em;
   padding: 1.5em;
