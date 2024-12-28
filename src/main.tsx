@@ -7,8 +7,13 @@ import './index.css'
 import App from './App.tsx'
 import GamesList from './components/dart/GameList.tsx';
 import LoggedDart from './components/dart/LoggedInDart.tsx';
+import Homepage from './components/home.tsx';
 
 const router = createBrowserRouter([
+  {
+    path: '/home',
+    element: <Homepage />,
+  },
   {
     path: '/',
     element: <App />,
