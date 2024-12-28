@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import pb from "../../services/pocketbase";
 
 import List from '@mui/joy/List';
@@ -36,6 +36,7 @@ const GamesList: React.FC = () => {
         };
 
         fetchGames();
+        //setLoading(false);
     }, []);
 
     useEffect(() => {
@@ -49,18 +50,20 @@ const GamesList: React.FC = () => {
         <>
             {loading && (<CircularProgress />)}
 
-            <List>
-                {games.map((game: any) => (
-                    <ListItem key={game.id}>
-                        <ListItemButton onClick={() => navigate(`/game/${game.throws}` )}>
-                            <ListItemDecorator><SportsIcon /></ListItemDecorator>
-                            <ListItemContent>{game.created}</ListItemContent>
-                            <KeyboardArrowRight />
-                        </ListItemButton>
+            {!loading &&
+                <List>
+                    {games.map((game: any) => (
+                        <ListItem key={game.id}>
+                            <ListItemButton onClick={() => navigate(`/game/${game.throws}`)}>
+                                <ListItemDecorator><SportsIcon /></ListItemDecorator>
+                                <ListItemContent>{game.created}</ListItemContent>
+                                <KeyboardArrowRight />
+                            </ListItemButton>
 
-                    </ListItem>
-                ))}
-            </List>
+                        </ListItem>
+                    ))}
+                </List>
+            }
         </>
     );
 }

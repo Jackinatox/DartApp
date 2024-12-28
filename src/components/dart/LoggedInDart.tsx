@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import ScoreDisplay from './ScoreDisplay';
-import ThrowHistory from './ThrowHistory';
 import CustomButton from '../CustomButton/CustomButton';
 import TopBar from "../CustomButton/TopBar";
 import { useParams } from 'react-router-dom';
 import pb from '../../services/pocketbase';
+import { CircularProgress } from '@mui/joy';
 
 const LoggedDart: React.FC = () => {
-    const { gameId } = useParams<{ gameId: string }>();
+    const { gameId } = useParams<{ gameId: string }>(); //gets the id from url jacknatox.com/game/{gameId}
+    
+    const [loading, setLoading] = useState(true);
+
     const [single, setSingle] = useState(0);
     const [double, setDouble] = useState(0);
     const [triple, setTriple] = useState(0);
@@ -15,19 +18,27 @@ const LoggedDart: React.FC = () => {
 
     const [score, setScore] = useState(0);
     const [throwCount, setThrowCount] = useState(0);
-    const [throws, setThrows] = useState<string[]>([]);
+
 
 
     useEffect(() => {
         const fetchGame = async () => {
+            setLoading(true);
             if (gameId) {
+                try {
                 const response = await pb.collection('Throws').getOne(gameId);
 
                 setSingle(response.singles);
+
+
+                setScore(response.singles * 20 + response.doubles * 40 + response.triples *60);
+                setThrowCount(response.singles + response.doubles + response.triples);
+                } catch {}
             }
         };
 
         fetchGame();
+        setTimeout(() => setLoading(false), 100);
     }, []);
 
 
@@ -67,84 +78,63 @@ const LoggedDart: React.FC = () => {
         }
 
         const points = multiplier * 20;
-        const throwLabel = multiplier === 0 ? 'Miss' :
-            multiplier === 1 ? 'Single' :
-                multiplier === 2 ? 'Double' : 'Triple';
 
         setScore(prev => prev + points);
-        setThrows(prev => [...prev, `${throwLabel} (${throwCount})`]);
         setThrowCount(prev => prev + 1);
     };
 
-
-
-    const resetGame = () => {
-        setScore(0);
-        setThrowCount(0);
-        setThrows([]);
-    };
-
     return (
-        <div style={{
-            maxWidth: '1200px',
-            margin: '20px auto',
-            padding: '20px',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            borderRadius: '8px',
-            backgroundColor: 'white'
-        }}>
-            <TopBar />
-            <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>
-                Dart Counter
-            </h1>
+        <>
+            {loading && (<CircularProgress />)}
 
-            <ScoreDisplay score={score} throwCount={throwCount} />
+            {!loading && 
 
             <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '10px',
-                marginBottom: '20px'
+                maxWidth: '1200px',
+                margin: '20px auto',
+                padding: '20px',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                borderRadius: '8px',
+                backgroundColor: 'white'
             }}>
-                <CustomButton
-                    onClick={() => handleThrow(1)}
-                    color="#4CAF50" //4CAF50
-                    text="Single (20)"
-                />
-                <CustomButton
-                    onClick={() => handleThrow(2)}
-                    color="#2196F3"
-                    text="Double (40)"
-                />
-                <CustomButton
-                    onClick={() => handleThrow(3)}
-                    color="#9C27B0"
-                    text="Triple (60)"
-                />
-                <CustomButton
-                    onClick={() => handleThrow(0)}
-                    color="#f44336"
-                    text="Miss (0)"
-                />
-            </div>
+                <TopBar />
+                <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>
+                    Dart Counter
+                </h1>
 
-            <button
-                onClick={resetGame}
-                style={{
-                    width: '100%',
-                    padding: '10px',
-                    backgroundColor: '#grey',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
+                <ScoreDisplay score={score} throwCount={throwCount} />
+
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '10px',
                     marginBottom: '20px'
-                }}
-            >
-                Reset Game
-            </button>
-            <ThrowHistory throws={throws} />
+                }}>
+                    <CustomButton
+                        onClick={() => handleThrow(1)}
+                        color="#4CAF50" //4CAF50
+                        text={"Single (" + single + ")"}
+                    />
+                    <CustomButton
+                        onClick={() => handleThrow(2)}
+                        color="#2196F3"
+                        text={"Double (" + double + ")"}
+                    />
+                    <CustomButton
+                        onClick={() => handleThrow(3)}
+                        color="#9C27B0"
+                        text={"Triple (" + triple + ")"}
+                    />
+                    <CustomButton
+                        onClick={() => handleThrow(0)}
+                        color="#f44336"
+                        text={"Miss (" + miss + ")"}
+                    />
+                </div>
 
-        </div>
+            </div>
+            }
+        </>
     );
 };
 
