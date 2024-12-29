@@ -3,7 +3,7 @@ import ScoreDisplay from "./ScoreDisplay";
 import TopBar from "../CustomButton/TopBar";
 import { useParams } from "react-router-dom";
 import pb from "../../services/pocketbase";
-import { Button, CircularProgress } from "@mui/joy";
+import { Button } from "@mui/joy";
 import ErrorIcon from "@mui/icons-material/Error";
 import Alert from "@mui/joy/Alert";
 

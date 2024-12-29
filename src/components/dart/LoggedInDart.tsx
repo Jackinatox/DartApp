@@ -3,7 +3,7 @@ import ScoreDisplay from "./ScoreDisplay";
 import TopBar from "../CustomButton/TopBar";
 import { useParams } from "react-router-dom";
 import pb from "../../services/pocketbase";
-import { Button, CircularProgress } from "@mui/joy";
+import { Button } from "@mui/joy";
 import ErrorIcon from "@mui/icons-material/Error";
 import Alert from "@mui/joy/Alert";
 
@@ -12,8 +12,9 @@ const LoggedDart: React.FC = () => {
 
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [siteError, setSiteError] = useState(false);
-
+  const [siteError] = useState(false);
+  
+  
   const [throwId, setThrowId] = useState("");
   const [single, setSingle] = useState(0);
   const [double, setDouble] = useState(0);
@@ -26,18 +27,24 @@ const LoggedDart: React.FC = () => {
   useEffect(() => {
     //fetch Games
     const fetchGame = async () => {
+      await checkLogin();
       setLoading(true);
+      ////setSiteError(false);
+
       if (gameId) {
         try {
           console.log("Running Initial Requests, GameId parsed: ", gameId);
           const game = await pb.collection("Games").getOne(gameId);
-          
-          console.log("Got Game: ", game);
+          if (!game) {
+            throw new Error("Game not found or invalid response");
+          }
+
           setThrowId(game.throws);
-          const tempThrow = game.throws;
-          console.log("Throw ID: ", tempThrow);
-          const response = await pb.collection("Throws").getOne(tempThrow);
-          console.log("Got Throw: ", response);
+
+          const response = await pb.collection("Throws").getOne(game.throws);
+          if (!response) {
+            throw new Error("Throws not found or invalid response");
+          }
 
           setSingle(response.singles);
           setDouble(response.doubles);
@@ -45,15 +52,22 @@ const LoggedDart: React.FC = () => {
           setMiss(response.misses);
 
           setScore(
-            response.singles * 20 +
-              response.doubles * 40 +
-              response.triples * 60
+            (response.singles || 0) * 20 +
+            (response.doubles || 0) * 40 +
+            (response.triples || 0) * 60
           );
-          setThrowCount(response.singles + response.doubles + response.triples);
+          setThrowCount(
+            (response.singles || 0) +
+            (response.doubles || 0) +
+            (response.triples || 0)
+          );
+
         } catch (error) {
           console.error(error);
+          //setSiteError(true);
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
       }
     };
 
@@ -61,7 +75,6 @@ const LoggedDart: React.FC = () => {
       setLoggedIn(pb.authStore.isValid);
     };
 
-    checkLogin();
     fetchGame();
   }, []);
 
@@ -79,7 +92,7 @@ const LoggedDart: React.FC = () => {
           });
           console.log("Updated: ", response);
         }
-      } catch {}
+      } catch { }
     };
 
     updateGame();
@@ -108,11 +121,6 @@ const LoggedDart: React.FC = () => {
   };
 
   return (
-    <>
-      {loading ? (
-        //<CircularProgress />
-        <></>
-      ) : (
         <>
           {siteError && (
             <Alert color="danger" startDecorator={<ErrorIcon />}>
@@ -159,6 +167,7 @@ const LoggedDart: React.FC = () => {
                 onClick={() => handleThrow(2)}
                 color="primary"
                 variant="solid"
+                loading={loading}
                 disabled={!loggedIn || siteError}
               >
                 Double ({double})
@@ -167,6 +176,7 @@ const LoggedDart: React.FC = () => {
                 onClick={() => handleThrow(3)}
                 color="neutral"
                 variant="solid"
+                loading={loading}
                 disabled={!loggedIn || siteError}
               >
                 Triple ({triple})
@@ -175,6 +185,7 @@ const LoggedDart: React.FC = () => {
                 onClick={() => handleThrow(0)}
                 color="danger"
                 variant="solid"
+                loading={loading}
                 disabled={!loggedIn || siteError}
               >
                 Miss ({miss})
@@ -182,8 +193,6 @@ const LoggedDart: React.FC = () => {
             </div>
           </div>
         </>
-      )}
-    </>
   );
 };
 

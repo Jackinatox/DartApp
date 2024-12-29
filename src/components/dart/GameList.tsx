@@ -21,7 +21,7 @@ const GamesList: React.FC = () => {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        setLoading(true);
+        // setLoading(true);
         const Lgames = await pb.collection("Games").getFullList({
           filter: `owner = '${user?.id}'`,
           sort: '-created'
@@ -42,10 +42,10 @@ const GamesList: React.FC = () => {
 
   useEffect(() => {
     if (games.length > 0) {
-      const timer = setTimeout(() => setLoading(false), 100);
+      const timer = setTimeout(() => setLoading(false), 1);
       return () => clearTimeout(timer);
     }
-  }, [games]); // Runs whenever `games` changes
+  }, [games]);
 
   return (
     <>
