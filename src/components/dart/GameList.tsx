@@ -24,6 +24,7 @@ const GamesList: React.FC = () => {
         setLoading(true);
         const Lgames = await pb.collection("Games").getFullList({
           filter: `owner = '${user?.id}'`,
+          sort: '-created'
         });
 
         if (Lgames.length === 0) {
@@ -61,7 +62,7 @@ const GamesList: React.FC = () => {
               {games.map((game: any) => (
                 <ListItem key={game.id}>
                   <ListItemButton
-                    onClick={() => navigate(`/game/${game.throws}`)}
+                    onClick={() => navigate(`/game/${game.id}`)}
                   >
                     <ListItemDecorator>
                       <SportsIcon />
