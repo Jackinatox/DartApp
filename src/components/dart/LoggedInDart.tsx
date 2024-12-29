@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import ScoreDisplay from "./ScoreDisplay";
-import CustomButton from "../CustomButton/CustomButton";
 import TopBar from "../CustomButton/TopBar";
 import { useParams } from "react-router-dom";
 import pb from "../../services/pocketbase";
-import { CircularProgress } from "@mui/joy";
+import { Button, CircularProgress } from "@mui/joy";
+import ErrorIcon from "@mui/icons-material/Error";
+import Alert from "@mui/joy/Alert";
 
 const LoggedDart: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>(); //gets the id from url jacknatox.com/game/{gameId}
 
   const [loading, setLoading] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [siteError, setSiteError] = useState(false);
 
   const [throwId, setThrowId] = useState("");
   const [single, setSingle] = useState(0);
@@ -21,18 +24,20 @@ const LoggedDart: React.FC = () => {
   const [throwCount, setThrowCount] = useState(0);
 
   useEffect(() => {
+    //fetch Games
     const fetchGame = async () => {
       setLoading(true);
       if (gameId) {
         try {
           console.log("Running Initial Requests, GameId parsed: ", gameId);
           const game = await pb.collection("Games").getOne(gameId);
-          console.log('Got Game: ', game);
+          
+          console.log("Got Game: ", game);
           setThrowId(game.throws);
           const tempThrow = game.throws;
           console.log("Throw ID: ", tempThrow);
           const response = await pb.collection("Throws").getOne(tempThrow);
-          console.log('Got Throw: ', response);
+          console.log("Got Throw: ", response);
 
           setSingle(response.singles);
           setDouble(response.doubles);
@@ -45,31 +50,39 @@ const LoggedDart: React.FC = () => {
               response.triples * 60
           );
           setThrowCount(response.singles + response.doubles + response.triples);
-        } catch {}
+        } catch (error) {
+          console.error(error);
+        }
+        setLoading(false);
       }
     };
 
+    const checkLogin = async () => {
+      setLoggedIn(pb.authStore.isValid);
+    };
+
+    checkLogin();
     fetchGame();
-    setTimeout(() => setLoading(false), 100);
   }, []);
 
   useEffect(() => {
+    //Update Game
     const updateGame = async () => {
       try {
         console.log("Updating data for throw:", throwId);
-        //if (gameId) {
-        const response = await pb.collection("Throws").update(throwId, {
-          singles: single,
-          doubles: double,
-          triples: triple,
-          misses: miss,
-        });
-        console.log("Updated: ", response);
-        //}
+        if (throwId) {
+          const response = await pb.collection("Throws").update(throwId, {
+            singles: single,
+            doubles: double,
+            triples: triple,
+            misses: miss,
+          });
+          console.log("Updated: ", response);
+        }
       } catch {}
     };
 
-   updateGame();
+    updateGame();
   }, [miss, single, double, triple]);
 
   const handleThrow = (multiplier: number) => {
@@ -96,56 +109,79 @@ const LoggedDart: React.FC = () => {
 
   return (
     <>
-      {loading && <CircularProgress />}
-
-      {!loading && (
-        <div
-          style={{
-            maxWidth: "1200px",
-            margin: "20px auto",
-            padding: "20px",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-            borderRadius: "8px",
-            backgroundColor: "white",
-          }}
-        >
-          <TopBar />
-          <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
-            Dart Counter
-          </h1>
-
-          <ScoreDisplay score={score} throwCount={throwCount} />
-
+      {loading ? (
+        //<CircularProgress />
+        <></>
+      ) : (
+        <>
+          {siteError && (
+            <Alert color="danger" startDecorator={<ErrorIcon />}>
+              {" "}
+              Wahrscheinlich nicht eingeloggt, zu aufwendig alle errors zu
+              prüfen{" "}
+            </Alert>
+          )}
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "10px",
-              marginBottom: "20px",
+              maxWidth: "1200px",
+              margin: "20px auto",
+              padding: "20px",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+              borderRadius: "8px",
+              backgroundColor: "white",
             }}
           >
-            <CustomButton
-              onClick={() => handleThrow(1)}
-              color="#4CAF50" //4CAF50
-              text={"Single (" + single + ")"}
-            />
-            <CustomButton
-              onClick={() => handleThrow(2)}
-              color="#2196F3"
-              text={"Double (" + double + ")"}
-            />
-            <CustomButton
-              onClick={() => handleThrow(3)}
-              color="#9C27B0"
-              text={"Triple (" + triple + ")"}
-            />
-            <CustomButton
-              onClick={() => handleThrow(0)}
-              color="#f44336"
-              text={"Miss (" + miss + ")"}
-            />
+            <TopBar />
+            <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
+              Dart Counter
+            </h1>
+
+            <ScoreDisplay score={score} throwCount={throwCount} />
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "10px",
+                marginBottom: "20px",
+              }}
+            >
+              <Button
+                onClick={() => handleThrow(1)}
+                color="success"
+                variant="solid"
+                loading={loading}
+                disabled={!loggedIn || siteError}
+              >
+                Single ({single})
+              </Button>
+              <Button
+                onClick={() => handleThrow(2)}
+                color="primary"
+                variant="solid"
+                disabled={!loggedIn || siteError}
+              >
+                Double ({double})
+              </Button>
+              <Button
+                onClick={() => handleThrow(3)}
+                color="neutral"
+                variant="solid"
+                disabled={!loggedIn || siteError}
+              >
+                Triple ({triple})
+              </Button>
+              <Button
+                onClick={() => handleThrow(0)}
+                color="danger"
+                variant="solid"
+                disabled={!loggedIn || siteError}
+              >
+                Miss ({miss})
+              </Button>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );
