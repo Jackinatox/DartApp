@@ -1,4 +1,4 @@
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('https://led-value.pockethost.io/');
+const pb = new PocketBase('https://dart.pockethost.io/');
 export default pb;

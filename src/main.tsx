@@ -11,12 +11,8 @@ import Homepage from './components/home.tsx';
 
 const router = createBrowserRouter([
   {
-    path: '/home',
-    element: <Homepage />,
-  },
-  {
     path: '/',
-    element: <App />,
+    element: <Homepage />,
   },
   {
     path: '/register',
@@ -33,7 +29,12 @@ const router = createBrowserRouter([
   {
     path: '/game/:gameId',
     element: <LoggedDart />
-  }
+  }, 
+  {
+    path: '/tryout',
+    element: <App />
+  },
+
 ]);
 
 createRoot(document.getElementById('root')!).render(

@@ -40,7 +40,7 @@ const Register: React.FC = () => {
 
             if (authData?.token){
                 console.log('Registration Successfull');
-                navigate('/home');
+                navigate('/');
             }
         } catch (error) {
             console.error('Registration failed:', error);

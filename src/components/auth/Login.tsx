@@ -33,7 +33,7 @@ const Login: React.FC = () => {
 
             if (authData?.token){
                 console.log('Login Successfull');
-                navigate('/home');
+                navigate('/');
             } 
             
         } catch (error) {
