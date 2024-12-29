@@ -27,10 +27,12 @@ const LoggedDart: React.FC = () => {
         try {
           console.log("Running Initial Requests, GameId parsed: ", gameId);
           const game = await pb.collection("Games").getOne(gameId);
-          //console.log('Git Game: ', game);
+          console.log('Got Game: ', game);
           setThrowId(game.throws);
-          const response = await pb.collection("Throws").getOne(throwId);
-          //console.log('Got Throw: ', response);
+          const tempThrow = game.throws;
+          console.log("Throw ID: ", tempThrow);
+          const response = await pb.collection("Throws").getOne(tempThrow);
+          console.log('Got Throw: ', response);
 
           setSingle(response.singles);
           setDouble(response.doubles);
@@ -67,15 +69,10 @@ const LoggedDart: React.FC = () => {
       } catch {}
     };
 
-    updateGame();
+   updateGame();
   }, [miss, single, double, triple]);
 
   const handleThrow = (multiplier: number) => {
-    if (multiplier === 1) {
-      //20
-      setSingle(single + 1);
-    }
-
     switch (multiplier) {
       case 0:
         setMiss(miss + 1); // Miss
