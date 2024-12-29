@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import TopBar from "./CustomButton/TopBar";
 import GamesList from "./dart/GameList";
 import { Button } from "@mui/joy";
@@ -7,12 +8,13 @@ import pb from "../services/pocketbase";
 
 const Homepage = () => {
   const [loading, SetLoading] = useState(false);
+  let navigate = useNavigate();
 
   const newGame = async () => {
     SetLoading(true);
     const user = pb.authStore.record;
     if (user) {
-      const throws = await pb.collection("Throws").create();
+      const throws = await pb.collection("Throws").create({ owner: user.id });
 
       const game = await pb
         .collection("Games")
@@ -20,6 +22,8 @@ const Homepage = () => {
 
       console.log("Throws: ", throws);
       console.log("Games: ", game);
+
+      navigate(`/game/${game.id}`);
     }
 
     SetLoading(false);
