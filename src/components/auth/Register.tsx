@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import pb from '../../services/pocketbase';
 import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
+import { useNavigate } from "react-router-dom";
 
 
 const Register: React.FC = () => {
@@ -9,6 +10,8 @@ const Register: React.FC = () => {
     const [password, setPassword] = useState('');   
     const [Confpassword, setConfPassword] = useState('');    
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    
 
     const isValidEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,8 +36,12 @@ const Register: React.FC = () => {
                 password: password,
                 passwordConfirm: password,
             });         
-            await pb.collection('users').authWithPassword(email, password);     //actual login
-            alert('Registration successful!');
+            const authData = await pb.collection('users').authWithPassword(email, password);     //actual login
+
+            if (authData?.token){
+                console.log('Registration Successfull');
+                navigate('/home');
+            }
         } catch (error) {
             console.error('Registration failed:', error);
             alert(error);
