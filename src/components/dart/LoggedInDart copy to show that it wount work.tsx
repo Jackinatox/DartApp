@@ -12,8 +12,7 @@ const LoggedDart: React.FC = () => {
 
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [siteError] = useState(false);
-  
+  const [siteError, setSiteError] = useState(false);
   
   const [throwId, setThrowId] = useState("");
   const [single, setSingle] = useState(0);
@@ -27,10 +26,8 @@ const LoggedDart: React.FC = () => {
   useEffect(() => {
     //fetch Games
     const fetchGame = async () => {
-      await checkLogin();
       setLoading(true);
-      ////setSiteError(false);
-
+      
       if (gameId) {
         try {
           console.log("Running Initial Requests, GameId parsed: ", gameId);
@@ -64,7 +61,7 @@ const LoggedDart: React.FC = () => {
 
         } catch (error) {
           console.error(error);
-          //setSiteError(true);
+          setSiteError(true);
         } finally {
           setLoading(false);
         }
@@ -75,6 +72,7 @@ const LoggedDart: React.FC = () => {
       setLoggedIn(pb.authStore.isValid);
     };
 
+    checkLogin();
     fetchGame();
   }, []);
 

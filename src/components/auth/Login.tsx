@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import pb from '../../services/pocketbase';
 import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
+import { useNavigate } from "react-router-dom";
 
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');   
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const isValidEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -29,10 +31,13 @@ const Login: React.FC = () => {
             setLoading(true);
             const authData = await pb.collection('users').authWithPassword(email, password);
 
-            alert(authData.token);
+            if (authData?.token){
+                console.log('Login Successfull');
+                navigate('/home');
+            } 
+            
         } catch (error) {
-            console.error('Registration failed:', error);
-            alert(error);
+            console.error('Login Failed:', error);
         }
         setLoading(false);
     };  
