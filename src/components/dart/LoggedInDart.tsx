@@ -163,6 +163,10 @@ const LoggedDart: React.FC = () => {
             variant="solid"
             loading={loading}
             disabled={!loggedIn || siteError}
+            sx={{
+              padding: '20px', // Increase padding
+              fontSize: '18px', // Increase font size
+            }}
           >
             Single ({single})
           </Button>
@@ -172,6 +176,10 @@ const LoggedDart: React.FC = () => {
             variant="solid"
             loading={loading}
             disabled={!loggedIn || siteError}
+            sx={{
+              padding: '20px', // Increase padding
+              fontSize: '18px', // Increase font size
+            }}
           >
             Double ({double})
           </Button>
@@ -181,6 +189,10 @@ const LoggedDart: React.FC = () => {
             variant="solid"
             loading={loading}
             disabled={!loggedIn || siteError}
+            sx={{
+              padding: '20px', // Increase padding
+              fontSize: '18px', // Increase font size
+            }}
           >
             Triple ({triple})
           </Button>
@@ -190,6 +202,10 @@ const LoggedDart: React.FC = () => {
             variant="solid"
             loading={loading}
             disabled={!loggedIn || siteError}
+            sx={{
+              padding: '20px', // Increase padding
+              fontSize: '18px', // Increase font size
+            }}
           >
             Miss ({miss})
           </Button>
