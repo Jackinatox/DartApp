@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import pb from "../../services/pocketbase";
 import Avatar from "@mui/joy/Avatar";
 import { List, ListItem } from "@mui/joy";
 import { Button } from "@mui/joy";
+import { Home } from "@mui/icons-material";
 
 const TopBar: React.FC = () => {
   const [userValid] = useState(pb.authStore.isValid);
   const [user] = useState(pb.authStore.record);
+
+  const navigate = useNavigate();
 
   const getEmail = () => {
     if (user) {
@@ -15,50 +18,61 @@ const TopBar: React.FC = () => {
     }
   };
 
-  //    const barStyle: React.CSSProperties = {
-  //        maxWidth: '100%',
-  //        margin: '0 auto',
-  //        display: 'flex',
-  //        flexDirection: 'row',
-  //        gap: '10px',
-  //    };
-
   return (
     <div>
-      {userValid ? (
-        //<Avatar src={getIconUrl()} />
-        <List
-          orientation="horizontal"
-          sx={{
-            display: "flex",
-            justifyContent: "space-between", // Ensures first and last items are aligned to the edges
-            width: "100%", // Make the list take the full width of its container
-          }}
-        >
-          <ListItem>
-            <Avatar> {getEmail()} </Avatar>
-          </ListItem>
-          <ListItem>
-            <Button
-              color="danger"
-              variant="outlined"
-              onClick={() => {
+      <List
+        orientation="horizontal"
+        sx={{
+          display: "flex",
+          justifyContent: "space-between", // Spread items to edges
+          alignItems: "center", // Center items vertically
+          gap: "10px", // Add spacing between items
+          width: "100%", // Full width of the container
+          padding: "0 0px", // Add some padding to the edges
+        }}
+      >
+        {/* Home Button */}
+        <ListItem sx={{ marginRight: "auto" }}> {/* Aligns to the far left */}
+          <Button
+            startDecorator={<Home />}
+            onClick={() => {navigate('/')}}
+            variant="solid"
+          >
+            Home
+          </Button>
+        </ListItem>
+
+        {userValid ? (
+          <>
+            {/* Avatar */}
+            <ListItem>
+              <Avatar>{getEmail()}</Avatar>
+            </ListItem>
+
+            {/* Logout Button */}
+            <ListItem>
+              <Button
+                color="danger"
+                variant="outlined"
+                onClick={() => {
                   pb.authStore.clear();
                   window.location.reload();
                   console.log("logout");
-              }}
-            >
-              {" "}
-              Logout{" "}
-            </Button>
-          </ListItem>
-        </List>
-      ) : (
-        <div>
-          <Link to="/register"> Register </Link>|
-          <Link to="/login"> Login </Link>
-        </div>
-      )}
+                }}
+              >
+                Logout
+              </Button>
+            </ListItem>
+          </>
+        ) : (
+          <>
+            {/* Register and Login Links */}
+            <ListItem>
+              <Link to="/register">Register</Link> | <Link to="/login">Login</Link>
+            </ListItem>
+          </>
+        )}
+      </List>
     </div>
   );
 };

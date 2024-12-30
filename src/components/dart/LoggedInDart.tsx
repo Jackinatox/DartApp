@@ -13,8 +13,8 @@ const LoggedDart: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
   const [siteError] = useState(false);
-  
-  
+
+
   const [throwId, setThrowId] = useState("");
   const [single, setSingle] = useState(0);
   const [double, setDouble] = useState(0);
@@ -23,6 +23,7 @@ const LoggedDart: React.FC = () => {
 
   const [score, setScore] = useState(0);
   const [throwCount, setThrowCount] = useState(0);
+
 
   useEffect(() => {
     //fetch Games
@@ -121,78 +122,80 @@ const LoggedDart: React.FC = () => {
   };
 
   return (
-        <>
-          {siteError && (
-            <Alert color="danger" startDecorator={<ErrorIcon />}>
-              {" "}
-              Wahrscheinlich nicht eingeloggt, zu aufwendig alle errors zu
-              prüfen{" "}
-            </Alert>
-          )}
-          <div
-            style={{
-              maxWidth: "1200px",
-              margin: "20px auto",
-              padding: "20px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              borderRadius: "8px",
-              backgroundColor: "white",
-            }}
+    <>
+      {siteError && (
+        <Alert color="danger" startDecorator={<ErrorIcon />}>
+          {" "}
+          Wahrscheinlich nicht eingeloggt, zu aufwendig alle errors zu
+          prüfen{" "}
+        </Alert>
+      )}
+
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "20px auto",
+          padding: "20px",
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          borderRadius: "8px",
+          backgroundColor: "white",
+        }}
+      >
+
+        <TopBar />
+        <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
+          Dart Counter
+        </h1>
+
+        <ScoreDisplay score={score} throwCount={throwCount} />
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "10px",
+            marginBottom: "20px",
+          }}
+        >
+          <Button
+            onClick={() => handleThrow(1)}
+            color="success"
+            variant="solid"
+            loading={loading}
+            disabled={!loggedIn || siteError}
           >
-            <TopBar />
-            <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
-              Dart Counter
-            </h1>
-
-            <ScoreDisplay score={score} throwCount={throwCount} />
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "10px",
-                marginBottom: "20px",
-              }}
-            >
-              <Button
-                onClick={() => handleThrow(1)}
-                color="success"
-                variant="solid"
-                loading={loading}
-                disabled={!loggedIn || siteError}
-              >
-                Single ({single})
-              </Button>
-              <Button
-                onClick={() => handleThrow(2)}
-                color="primary"
-                variant="solid"
-                loading={loading}
-                disabled={!loggedIn || siteError}
-              >
-                Double ({double})
-              </Button>
-              <Button
-                onClick={() => handleThrow(3)}
-                color="neutral"
-                variant="solid"
-                loading={loading}
-                disabled={!loggedIn || siteError}
-              >
-                Triple ({triple})
-              </Button>
-              <Button
-                onClick={() => handleThrow(0)}
-                color="danger"
-                variant="solid"
-                loading={loading}
-                disabled={!loggedIn || siteError}
-              >
-                Miss ({miss})
-              </Button>
-            </div>
-          </div>
-        </>
+            Single ({single})
+          </Button>
+          <Button
+            onClick={() => handleThrow(2)}
+            color="primary"
+            variant="solid"
+            loading={loading}
+            disabled={!loggedIn || siteError}
+          >
+            Double ({double})
+          </Button>
+          <Button
+            onClick={() => handleThrow(3)}
+            color="neutral"
+            variant="solid"
+            loading={loading}
+            disabled={!loggedIn || siteError}
+          >
+            Triple ({triple})
+          </Button>
+          <Button
+            onClick={() => handleThrow(0)}
+            color="danger"
+            variant="solid"
+            loading={loading}
+            disabled={!loggedIn || siteError}
+          >
+            Miss ({miss})
+          </Button>
+        </div>
+      </div>
+    </>
   );
 };
 
