@@ -60,7 +60,8 @@ const LoggedDart: React.FC = () => {
           setThrowCount(
             (response.singles || 0) +
             (response.doubles || 0) +
-            (response.triples || 0)
+            (response.triples || 0) +
+            (response.misses)
           );
 
         } catch (error) {
