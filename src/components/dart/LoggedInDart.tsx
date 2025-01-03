@@ -12,7 +12,7 @@ const LoggedDart: React.FC = () => {
 
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [siteError] = useState(false);
+  const [siteError] = useState(false);  //only use for displaying a site error and this is unused
 
 
   const [throwId, setThrowId] = useState("");
@@ -29,11 +29,11 @@ const LoggedDart: React.FC = () => {
     //fetch Games
     const fetchGame = async () => {
       await checkLogin();
-      setLoading(true);
-      ////setSiteError(false);
-
+      
       if (gameId) {
         try {
+          setLoading(true);
+          console.log('set to true')
           console.log("Running Initial Requests, GameId parsed: ", gameId);
           const game = await pb.collection("Games").getOne(gameId);
           if (!game) {
@@ -66,9 +66,9 @@ const LoggedDart: React.FC = () => {
 
         } catch (error) {
           console.error(error);
-          //setSiteError(true);
         } finally {
           setLoading(false);
+          console.log('set to false')
         }
       }
     };
@@ -142,7 +142,7 @@ const LoggedDart: React.FC = () => {
           backgroundColor: "white",
         }}
       >
-
+        {loading ? "istTrue" : "IstFalse"  /* For Debugginf */ }    
         <TopBar />
         <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
           Dart Counter
@@ -162,8 +162,7 @@ const LoggedDart: React.FC = () => {
             onClick={() => handleThrow(1)}
             color="success"
             variant="solid"
-            loading={loading}
-            disabled={!loggedIn || siteError}
+            disabled={!loggedIn || loading }
             sx={{
               padding: '20px', // Increase padding
               fontSize: '18px', // Increase font size
@@ -175,8 +174,7 @@ const LoggedDart: React.FC = () => {
             onClick={() => handleThrow(2)}
             color="primary"
             variant="solid"
-            loading={loading}
-            disabled={!loggedIn || siteError}
+            disabled={!loggedIn || loading}
             sx={{
               padding: '20px', // Increase padding
               fontSize: '18px', // Increase font size
@@ -188,8 +186,7 @@ const LoggedDart: React.FC = () => {
             onClick={() => handleThrow(3)}
             color="neutral"
             variant="solid"
-            loading={loading}
-            disabled={!loggedIn || siteError}
+            disabled={!loggedIn || loading}
             sx={{
               padding: '20px', // Increase padding
               fontSize: '18px', // Increase font size
@@ -201,8 +198,7 @@ const LoggedDart: React.FC = () => {
             onClick={() => handleThrow(0)}
             color="danger"
             variant="solid"
-            loading={loading}
-            disabled={!loggedIn || siteError}
+            disabled={!loggedIn || loading}
             sx={{
               padding: '20px', // Increase padding
               fontSize: '18px', // Increase font size
