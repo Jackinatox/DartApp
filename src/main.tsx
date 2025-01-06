@@ -8,6 +8,7 @@ import App from './App.tsx'
 import GamesList from './components/dart/GameList.tsx';
 import LoggedDart from './components/dart/LoggedInDart.tsx';
 import Homepage from './components/home.tsx';
+import Stats from './pages/stats.tsx';
 
 const router = createBrowserRouter([
   {
@@ -34,7 +35,10 @@ const router = createBrowserRouter([
     path: '/tryout',
     element: <App />
   },
-
+  {
+    path: '/stats',
+    element: <Stats />
+  },
 ]);
 
 createRoot(document.getElementById('root')!).render(
