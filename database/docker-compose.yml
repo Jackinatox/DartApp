@@ -10,3 +10,4 @@ services:
       - ./data:/pb_data
       - ./public:/pb_public
       - ./migrations:/pb_migrations
+      - ./pb_hooks:/pb_hooks
