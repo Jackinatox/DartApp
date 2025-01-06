@@ -101,6 +101,15 @@ const LoggedDart: React.FC = () => {
   }, [miss, single, double, triple]);
 
   const handleThrow = (multiplier: number) => {
+
+    if (throwCount === 99){
+      const response = confirm("Du hast schon 99 Würfe, sicher das du Fortfahren willst?");
+
+      if (!response){
+        return;
+      }
+    }
+
     switch (multiplier) {
       case 0:
         setMiss(miss + 1); // Miss
@@ -142,7 +151,6 @@ const LoggedDart: React.FC = () => {
           backgroundColor: "white",
         }}
       >
-        {loading ? "istTrue" : "IstFalse"  /* For Debugginf */ }    
         <TopBar />
         <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
           Dart Counter
