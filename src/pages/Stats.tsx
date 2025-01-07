@@ -36,6 +36,47 @@ const GlobalStatsDisplay: React.FC = () => {
     fetchStats();
   }, []);
 
+  useEffect(() => {
+    let unsubscribe: () => void;
+
+    const subscribeToGames = async () => {
+      try {
+        // Subscribe to real-time changes
+        const unsubscribeFunc = await pb.collection('GlobalStats').subscribe('*', (event) => {
+          console.log('Real-time update:', event);
+
+          // Handle event types: "create", "update", or "delete"
+          if (event.action === 'update') {
+            console.log('Game updated:', event.record);
+            setStats({
+              TotalPoints: event.record.TotalPoints,
+              TotalSingle: event.record.TotalSingle,
+              TotalDouble: event.record.TotalDouble,
+              TotalTriple: event.record.TotalTriple,
+              TotalMisses: event.record.TotalMisses
+            });
+
+          }
+        });
+
+        // Store the unsubscribe function
+        unsubscribe = unsubscribeFunc;
+      } catch (error) {
+        console.error('Failed to subscribe to real-time updates:', error);
+      }
+    };
+
+    subscribeToGames();
+
+    // Cleanup subscription on component unmount
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, []);
+
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
