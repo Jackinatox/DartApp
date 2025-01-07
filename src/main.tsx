@@ -8,7 +8,8 @@ import App from './App.tsx'
 import GamesList from './components/dart/GameList.tsx';
 import LoggedDart from './components/dart/LoggedInDart.tsx';
 import Homepage from './components/home.tsx';
-import Stats from './pages/stats.tsx';
+import Stats from './pages/Stats.tsx';
+import Profile from './components/auth/Profile.tsx';
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: '/stats',
     element: <Stats />
+  },
+  {
+    path: '/profile',
+    element: <Profile />
   },
 ]);
 
