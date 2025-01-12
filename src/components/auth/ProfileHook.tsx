@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Avatar, Button, FormHelperText, Grid, Input, Typography } from '@mui/joy';
+import { Avatar, Button, Grid, Input, Typography } from '@mui/joy';
 import Card from '@mui/joy/Card';
 import pb from '../../services/pocketbase';
 import TopBar from '../CustomButton/TopBar';
@@ -13,7 +13,6 @@ function ProfileHook() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    getValues
   } = useForm();
 
 
@@ -28,7 +27,7 @@ function ProfileHook() {
       setPic(pb.files.getURL(uRecord, uRecord.avatar));
     }
 
-    
+
   }, []);
 
   const onsubmit = async (data: FieldValues) => {
