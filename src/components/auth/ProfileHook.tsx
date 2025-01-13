@@ -5,7 +5,8 @@ import pb from '../../services/pocketbase';
 import TopBar from '../CustomButton/TopBar';
 import { FieldValues, useForm } from 'react-hook-form';
 import CheckIcon from '@mui/icons-material/Check';
-import { InfoOutlined } from '@mui/icons-material';
+import { InfoOutlined, Padding } from '@mui/icons-material';
+import AvatarEditor from './AvatarEditor';
 
 
 function ProfileHook() {
@@ -13,6 +14,7 @@ function ProfileHook() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm();
 
 
@@ -20,14 +22,23 @@ function ProfileHook() {
 
 
   useEffect(() => {
-    const uRecord = pb.authStore.record;
+    const updatePB = async () => {
+      const uRecord = pb.authStore.record;
 
-    //console.log(uRecord);
-    if (uRecord) {
-      setPic(pb.files.getURL(uRecord, uRecord.avatar));
+      if (uRecord) {
+        setPic(pb.files.getURL(uRecord, uRecord.avatar));
+      }
     }
 
+    const setInitialValues = async () => {
+      if (pb.authStore.record) {
+        setValue('firstName', pb.authStore.record.firstName);
+        setValue('lastName', pb.authStore.record.name);
+      }
+    }
 
+    updatePB();
+    setInitialValues();
   }, []);
 
   const onsubmit = async (data: FieldValues) => {
@@ -37,11 +48,14 @@ function ProfileHook() {
 
     if (uRecord) {
       try {
-        // Update the current user with the data from the form
+        // Update the current user with the data from the react hook form
+
+        console.log("email: ", data.email);
         await pb.collection("users").update(uRecord.id, {
+          ...uRecord,
           firstName: data.firstName,
           name: data.lastName,
-          email: data.email,
+          //email: data.email,
         });
         console.log('User updated successfully');
       } catch (error) {
@@ -83,17 +97,22 @@ function ProfileHook() {
           )}
         </Grid>
 
-        <Grid size={{ xs: 4 }}><Input error={errors.email && true}
-          {...register('email', {
-            required: "Email ist required",
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "Format entspricht keiner Email"
-            },
-          })} placeholder='Email' />
-          {errors.email && (
+        <Grid size={{ xs: 4 }}>
+          <Input disabled error={errors.email && true}
+            {...register('email', {
+              required: "Email ist required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Format entspricht keiner Email"
+              },
+            })} placeholder='Email' />
+          {errors.email ? (
             <Typography sx={{ display: 'flex', alignItems: 'center' }} level='body-lg' color='danger'>
               <InfoOutlined sx={{ marginRight: 0.5 }} /> {errors.email.message?.toString()}
+            </Typography>
+          ) : (
+            <Typography sx={{ display: 'flex', alignItems: 'center' }} level='body-lg' color='warning'>
+              <InfoOutlined sx={{ marginRight: 0.5 }} /> Updating Email is currently dissabled
             </Typography>
           )}
         </Grid>
@@ -101,6 +120,10 @@ function ProfileHook() {
         <Grid size={{ xs: 4 }} sx={{ display: 'flex' }}>
           <Button type='submit' loading={isSubmitting} startDecorator={<CheckIcon />}> Save </Button>
         </Grid>
+        <Grid size={{ xs: 4 }} sx={{ display: 'flex', alignItems: 'center'}}>
+            <AvatarEditor></AvatarEditor>
+        </Grid>
+
       </Grid>
     </Card>
   </form>

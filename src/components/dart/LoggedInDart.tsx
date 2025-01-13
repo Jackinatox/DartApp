@@ -29,7 +29,7 @@ const LoggedDart: React.FC = () => {
     //fetch Games
     const fetchGame = async () => {
       await checkLogin();
-      
+
       if (gameId) {
         try {
           setLoading(true);
@@ -64,10 +64,10 @@ const LoggedDart: React.FC = () => {
             (response.misses)
           );
 
+          setLoading(false);
         } catch (error) {
           console.error(error);
         } finally {
-          setLoading(false);
           console.log('set to false')
         }
       }
@@ -102,10 +102,10 @@ const LoggedDart: React.FC = () => {
 
   const handleThrow = (multiplier: number) => {
 
-    if (throwCount === 99){
+    if (throwCount === 99) {
       const response = confirm("Du hast schon 99 Würfe, sicher das du Fortfahren willst?");
 
-      if (!response){
+      if (!response) {
         return;
       }
     }
@@ -170,7 +170,7 @@ const LoggedDart: React.FC = () => {
             onClick={() => handleThrow(1)}
             color="success"
             variant="solid"
-            disabled={!loggedIn || loading }
+            disabled={!loggedIn || loading}
             sx={{
               padding: '20px', // Increase padding
               fontSize: '18px', // Increase font size
