@@ -75,7 +75,7 @@ function ProfileHook() {
             "--Avatar-size": "80px"
           }} />
 
-          <AvatarEditor ></AvatarEditor>
+          <AvatarEditor sx={{ paddingLeft: '16px' }}></AvatarEditor>
 
         </Grid>
         <Grid size={{ xs: 4, md: 2 }}>
