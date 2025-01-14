@@ -1,13 +1,17 @@
 import { CloudUpload } from '@mui/icons-material';
-import { Avatar, Button } from '@mui/joy';
-import React, { useState } from 'react';
+import { Button } from '@mui/joy';
+import React from 'react';
 import pb from '../../services/pocketbase';
 
 const AvatarEditor = () => {
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
+        console.log('files before if', files);
+
         if (files && files.length > 0) {
+            console.log('files after if', files);
+
             const file = files[0];  //this is the image to be uploaded
             //TODO: Handle the file upload logic here
 
@@ -20,10 +24,10 @@ const AvatarEditor = () => {
     const updateUserProfilePic = async (userId: string, file: File) => {
         try {
             const formData = new FormData();
-            formData.append('profilePic', file);
+            formData.append('avatar', file);
 
-            const updateUser = await pb.collection('users').update(userId, formData);
-
+            await pb.collection('users').update(userId, formData);
+            pb.collection('users').authRefresh();
         } catch (error) {
             console.error(error);
         }

@@ -5,7 +5,7 @@ import pb from '../../services/pocketbase';
 import TopBar from '../CustomButton/TopBar';
 import { FieldValues, useForm } from 'react-hook-form';
 import CheckIcon from '@mui/icons-material/Check';
-import { InfoOutlined, Padding } from '@mui/icons-material';
+import { InfoOutlined } from '@mui/icons-material';
 import AvatarEditor from './AvatarEditor';
 
 
@@ -70,10 +70,13 @@ function ProfileHook() {
 
       <Grid size={{ xs: 3 }}><TopBar /></Grid>
       <Grid container columnSpacing={1.5} rowSpacing={1.5} columns={{ xs: 1, md: 4 }}>
-        <Grid size={{ xs: 4 }} sx={{ marginBottom: 4 }}>
+        <Grid size={{ xs: 4 }} sx={{ marginBottom: 4, display: 'flex', alignItems: 'center' }}>
           <Avatar src={pic} size="lg" sx={{
             "--Avatar-size": "80px"
           }} />
+
+          <AvatarEditor ></AvatarEditor>
+
         </Grid>
         <Grid size={{ xs: 4, md: 2 }}>
           <Input error={errors.firstName && true} {...register('firstName', {
@@ -117,11 +120,8 @@ function ProfileHook() {
           )}
         </Grid>
 
-        <Grid size={{ xs: 4 }} sx={{ display: 'flex' }}>
+        <Grid size={{ xs: 4 }} sx={{ display: 'flex', alignItems: 'center' }}>
           <Button type='submit' loading={isSubmitting} startDecorator={<CheckIcon />}> Save </Button>
-        </Grid>
-        <Grid size={{ xs: 4 }} sx={{ display: 'flex', alignItems: 'center'}}>
-            <AvatarEditor></AvatarEditor>
         </Grid>
 
       </Grid>
