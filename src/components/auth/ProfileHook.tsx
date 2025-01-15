@@ -34,6 +34,7 @@ function ProfileHook() {
       if (pb.authStore.record) {
         setValue('firstName', pb.authStore.record.firstName);
         setValue('lastName', pb.authStore.record.name);
+        setValue('email', pb.authStore.record.email);
       }
     }
 
@@ -75,7 +76,7 @@ function ProfileHook() {
             "--Avatar-size": "80px"
           }} />
 
-          <AvatarEditor sx={{ paddingLeft: '16px' }}></AvatarEditor>
+          <AvatarEditor />
 
         </Grid>
         <Grid size={{ xs: 4, md: 2 }}>

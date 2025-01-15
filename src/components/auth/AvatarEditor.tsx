@@ -2,23 +2,19 @@ import { CloudUpload } from '@mui/icons-material';
 import { Button } from '@mui/joy';
 import React from 'react';
 import pb from '../../services/pocketbase';
-import { SxProps } from '@mui/system';
 
-interface AvatarEditorProps {
-    sx?: SxProps;
-}
-
-const AvatarEditor: React.FC<AvatarEditorProps> = ({ sx }) => {
+const AvatarEditor: React.FC = () => {
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
-        console.log('files before if', files);
 
         if (files && files.length > 0) {
-            console.log('files after if', files);
 
             const file = files[0];
             if (pb.authStore.record) {
                 await updateUserProfilePic(pb.authStore.record.id, file);
+                pb.collection('users').authRefresh();
+                 
+                
             }
         }
     }
@@ -47,7 +43,7 @@ const AvatarEditor: React.FC<AvatarEditorProps> = ({ sx }) => {
             <Button
                 onClick={() => { document.getElementById('pbImageInput')?.click() }}
                 startDecorator={<CloudUpload />}
-                sx={sx}
+                sx={{ marginLeft: '20px' }}
             >
                 Upload
             </Button>
