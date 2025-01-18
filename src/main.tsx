@@ -43,10 +43,6 @@ const router = createBrowserRouter([
   },
   {
     path: '/profile',
-    element: <Profile />
-  },
-  {
-    path: '/profilehook',
     element: <ProfileHook />
   },
 ]);
