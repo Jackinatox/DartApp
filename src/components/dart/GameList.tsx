@@ -9,6 +9,7 @@ import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import SportsIcon from "@mui/icons-material/Sports";
 import CircularProgress from "@mui/joy/CircularProgress";
+import { format } from "date-fns/format";
 
 const GamesList: React.FC = () => {
   const [games, setGames] = useState<any[]>([]);
@@ -67,7 +68,9 @@ const GamesList: React.FC = () => {
                     <ListItemDecorator>
                       <SportsIcon />
                     </ListItemDecorator>
-                    <ListItemContent>{game.created}</ListItemContent>
+                    <ListItemContent>
+                      {format(new Date(game.created), 'dd.MM.yyyy HH:mm')}
+                    </ListItemContent>
                     <KeyboardArrowRight />
                   </ListItemButton>
                 </ListItem>
