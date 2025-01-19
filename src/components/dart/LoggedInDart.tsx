@@ -107,7 +107,7 @@ const LoggedDart: React.FC = () => {
 
   const handleThrow = (multiplier: number) => {
 
-    if (single + double + triple === 99) {
+    if (single + double + triple + miss === 99) {
       const response = confirm("Du hast schon 99 Würfe, sicher das du Fortfahren willst?");
 
       if (!response) {
@@ -156,7 +156,7 @@ const LoggedDart: React.FC = () => {
           Dart Counter
         </h1>
 
-        <ScoreDisplay score={single * 20 + double * 40 + triple * 60} throwCount={single + double + triple} />
+        <ScoreDisplay score={single * 20 + double * 40 + triple * 60} throwCount={single + double + triple+ miss} />
 
         <div
           style={{
