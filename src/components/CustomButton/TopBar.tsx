@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import pb from "../../services/pocketbase";
 import Avatar from "@mui/joy/Avatar";
@@ -9,6 +9,17 @@ import { Home } from "@mui/icons-material";
 const TopBar: React.FC = () => {
   const [userValid] = useState(pb.authStore.isValid);
   const [user] = useState(pb.authStore.record);
+
+  const [pic, setPic] = useState('');
+
+  useEffect(() => {
+    const uRecord = pb.authStore.record;
+
+    //console.log(uRecord);
+    if (uRecord) {
+      setPic(pb.files.getURL(uRecord, uRecord.avatar));
+    }
+  }, []);
 
   const navigate = useNavigate();
 
@@ -35,7 +46,7 @@ const TopBar: React.FC = () => {
         <ListItem sx={{ marginRight: "auto" }}> {/* Aligns to the far left */}
           <Button
             startDecorator={<Home />}
-            onClick={() => {navigate('/')}}
+            onClick={() => { navigate('/') }}
             variant="solid"
           >
             Home
@@ -46,7 +57,10 @@ const TopBar: React.FC = () => {
           <>
             {/* Avatar */}
             <ListItem>
-              <Avatar>{getEmail()}</Avatar>
+              <Avatar sx={{
+                cursor: "pointer", "&:hover": { opacity: 0.2 },
+              }}
+                onClick={() => { navigate('/profile') }} src={pic}>{getEmail()}</Avatar>
             </ListItem>
 
             {/* Logout Button */}
