@@ -3,9 +3,9 @@ import ScoreDisplay from "./ScoreDisplay";
 import TopBar from "../CustomButton/TopBar";
 import { useParams } from "react-router-dom";
 import pb from "../../services/pocketbase";
-import { Button } from "@mui/joy";
 import ErrorIcon from "@mui/icons-material/Error";
 import Alert from "@mui/joy/Alert";
+import DecButton from "../CustomButton/DecButton";
 
 const LoggedDart: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>(); //gets the id from url jacknatox.com/game/{gameId}
@@ -20,9 +20,6 @@ const LoggedDart: React.FC = () => {
   const [double, setDouble] = useState(0);
   const [triple, setTriple] = useState(0);
   const [miss, setMiss] = useState(0);
-
-  const [score, setScore] = useState(0);
-  const [throwCount, setThrowCount] = useState(0);
 
 
   useEffect(() => {
@@ -52,18 +49,6 @@ const LoggedDart: React.FC = () => {
           setTriple(response.triples);
           setMiss(response.misses);
 
-          setScore(
-            (response.singles || 0) * 20 +
-            (response.doubles || 0) * 40 +
-            (response.triples || 0) * 60
-          );
-          setThrowCount(
-            (response.singles || 0) +
-            (response.doubles || 0) +
-            (response.triples || 0) +
-            (response.misses)
-          );
-
           setLoading(false);
         } catch (error) {
           console.error(error);
@@ -84,6 +69,9 @@ const LoggedDart: React.FC = () => {
     //Update Game
     const updateGame = async () => {
       try {
+
+
+
         console.log("Updating data for throw:", throwId);
         if (throwId) {
           const response = await pb.collection("Throws").update(throwId, {
@@ -100,9 +88,26 @@ const LoggedDart: React.FC = () => {
     updateGame();
   }, [miss, single, double, triple]);
 
+  const handleDec = (multiplier: number) => {
+    switch (multiplier) {
+      case 0:
+        setMiss(miss - 1); // Miss
+        break;
+      case 1:
+        setSingle(single - 1); // 20
+        break;
+      case 2:
+        setDouble(double - 1); // Double
+        break;
+      case 3:
+        setTriple(triple - 1); // Triple
+        break;
+    }   
+  }
+
   const handleThrow = (multiplier: number) => {
 
-    if (throwCount === 99) {
+    if (single + double + triple === 99) {
       const response = confirm("Du hast schon 99 Würfe, sicher das du Fortfahren willst?");
 
       if (!response) {
@@ -124,11 +129,6 @@ const LoggedDart: React.FC = () => {
         setTriple(triple + 1); // Triple
         break;
     }
-
-    const points = multiplier * 20;
-
-    setScore((prev) => prev + points);
-    setThrowCount((prev) => prev + 1);
   };
 
   return (
@@ -156,7 +156,7 @@ const LoggedDart: React.FC = () => {
           Dart Counter
         </h1>
 
-        <ScoreDisplay score={score} throwCount={throwCount} />
+        <ScoreDisplay score={single * 20 + double * 40 + triple * 60} throwCount={single + double + triple} />
 
         <div
           style={{
@@ -166,54 +166,41 @@ const LoggedDart: React.FC = () => {
             marginBottom: "20px",
           }}
         >
-          <Button
+          <DecButton
+            disabled={!loggedIn || loading}
             onClick={() => handleThrow(1)}
+            onDecrease={() => handleDec(1)}
             color="success"
-            variant="solid"
+            mainLabel="Single"
+            points={single}
+          ></DecButton>
+
+          <DecButton
             disabled={!loggedIn || loading}
-            sx={{
-              padding: '20px', // Increase padding
-              fontSize: '18px', // Increase font size
-            }}
-          >
-            Single ({single})
-          </Button>
-          <Button
             onClick={() => handleThrow(2)}
+            onDecrease={() => handleDec(2)}
             color="primary"
-            variant="solid"
+            mainLabel="Double"
+            points={double}
+          ></DecButton>
+
+          <DecButton
             disabled={!loggedIn || loading}
-            sx={{
-              padding: '20px', // Increase padding
-              fontSize: '18px', // Increase font size
-            }}
-          >
-            Double ({double})
-          </Button>
-          <Button
             onClick={() => handleThrow(3)}
+            onDecrease={() => handleDec(3)}
             color="neutral"
-            variant="solid"
+            mainLabel="Triple"
+            points={triple}
+          ></DecButton>
+
+          <DecButton
             disabled={!loggedIn || loading}
-            sx={{
-              padding: '20px', // Increase padding
-              fontSize: '18px', // Increase font size
-            }}
-          >
-            Triple ({triple})
-          </Button>
-          <Button
             onClick={() => handleThrow(0)}
+            onDecrease={() => handleDec(0)}
             color="danger"
-            variant="solid"
-            disabled={!loggedIn || loading}
-            sx={{
-              padding: '20px', // Increase padding
-              fontSize: '18px', // Increase font size
-            }}
-          >
-            Miss ({miss})
-          </Button>
+            mainLabel="Miss"
+            points={miss}
+          ></DecButton>
         </div>
       </div>
     </>
