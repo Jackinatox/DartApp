@@ -10,7 +10,7 @@ npm i
 ```
 
 1. Create a `.env` file. Ive created a `.env.example`. Just rename or duplicate it.
-2. Fill the variables  with your credentials. Link to all [ENV-Variabels](https://www.notion.so/Dart-App-1776b88a2c528156a055d12cb3320855?pvs=21)
+2. Fill the variables  with your credentials. Link to all [ENV-Variabels](#env-table)
 3. Try it!
 
 ```bash
@@ -21,6 +21,7 @@ npm run dev
 
 ## ENV-Variables
 
+<a name="env-table"></a>
 | Name | Explaination | Default |
 | --- | --- | --- |
 | VITE_POCKETBASE_URL | The URL to your Pocketbase Instance | Not given |
