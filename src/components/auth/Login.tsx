@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');   
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -15,15 +15,15 @@ const Login: React.FC = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
-    
+
     const isButtonEnabled = password.length > 3 && isValidEmail(email);
 
     const buttonStyle: React.CSSProperties = {
-        maxWidth: '60%', 
-        margin: '0 auto', 
-        display: 'flex', 
+        maxWidth: '60%',
+        margin: '0 auto',
+        display: 'flex',
         flexDirection: 'column',
-        gap: '10px', 
+        gap: '10px',
     };
 
     const handleLogin = async () => {
@@ -31,17 +31,17 @@ const Login: React.FC = () => {
             setLoading(true);
             const authData = await pb.collection('users').authWithPassword(email, password);
 
-            if (authData?.token){
+            if (authData?.token) {
                 console.log('Login Successfull');
                 navigate('/');
-            } 
-            
+            }
+
         } catch (error) {
             console.error('Login Failed:', error);
         }
         setLoading(false);
-    };  
-    
+    };
+
     return (
         <div style={buttonStyle}>
             <Input
@@ -60,12 +60,13 @@ const Login: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 slotProps={{ input: { 'aria-label': 'Password' } }}
             />
-            <Button 
+            <Button
                 variant="outlined"
-                 onClick={handleLogin}
-                 disabled={!isButtonEnabled}
-                 loading={loading}
-                 > Login </Button>
+                onClick={handleLogin}
+                disabled={!isButtonEnabled}
+                loading={loading}
+            > Login
+            </Button>
         </div>
     );
 }
